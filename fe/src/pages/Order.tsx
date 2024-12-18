@@ -7,6 +7,15 @@ import WaterImage from '../assets/images/Water.png';
 export default function OrderPage() {
   const [selectedService, setSelectedService] = useState('cleaning');
 
+  // State untuk jumlah item pada Water Delivery
+  const [waterOrder, setWaterOrder] = useState([0, 0, 0, 0]);
+
+  const handleQuantityChange = (index: number, delta: number) => {
+    setWaterOrder((prev) =>
+      prev.map((qty, i) => (i === index ? Math.max(qty + delta, 0) : qty))
+    );
+  };
+
   const renderServiceContent = () => {
     switch (selectedService) {
       case 'cleaning':
@@ -36,7 +45,7 @@ export default function OrderPage() {
       case 'water':
         return (
           <div className="grid grid-cols-2 gap-6">
-            {[1, 2, 3, 4].map((_, idx) => (
+            {waterOrder.map((qty, idx) => (
               <div
                 key={idx}
                 className="flex flex-col items-center bg-white rounded-lg p-4 shadow-md"
@@ -45,9 +54,19 @@ export default function OrderPage() {
                 <p className="text-sm font-bold mb-1">Le Minerale 15L</p>
                 <p className="text-sm mb-2">Rp 19.000</p>
                 <div className="flex items-center space-x-2">
-                  <button className="w-6 h-6 bg-gray-200 rounded">-</button>
-                  <span className="text-sm">1</span>
-                  <button className="w-6 h-6 bg-gray-200 rounded">+</button>
+                  <button
+                    onClick={() => handleQuantityChange(idx, -1)}
+                    className="w-6 h-6 bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    -
+                  </button>
+                  <span className="text-sm">{qty}</span>
+                  <button
+                    onClick={() => handleQuantityChange(idx, 1)}
+                    className="w-6 h-6 bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
             ))}
@@ -57,10 +76,7 @@ export default function OrderPage() {
         return (
           <>
             {[1, 2].map((_, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-lg p-4 shadow-md mb-4"
-              >
+              <div key={idx} className="bg-white rounded-lg p-4 shadow-md mb-4">
                 <div className="flex items-center space-x-4">
                   <img src={ProviderImage} alt="Provider" className="w-12 h-12 rounded-full" />
                   <div>
@@ -70,10 +86,18 @@ export default function OrderPage() {
                   </div>
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-                  <p>Clothes: <span className="font-bold">Rp 20.000/Kg</span></p>
-                  <p>Bedcover: <span className="font-bold">Rp 30.000/Kg</span></p>
-                  <p>Helm: <span className="font-bold">Rp 30.000/Kg</span></p>
-                  <p>Others: <span className="font-bold">To be discussed</span></p>
+                  <p>
+                    Clothes: <span className="font-bold">Rp 20.000/Kg</span>
+                  </p>
+                  <p>
+                    Bedcover: <span className="font-bold">Rp 30.000/Kg</span>
+                  </p>
+                  <p>
+                    Helm: <span className="font-bold">Rp 30.000/Kg</span>
+                  </p>
+                  <p>
+                    Others: <span className="font-bold">To be discussed</span>
+                  </p>
                 </div>
               </div>
             ))}

@@ -1,17 +1,18 @@
+// fe/src/pages/Profile.tsx
 import Header from '../components/Header';
 import KostImage from '../assets/images/Kost.png';
 import ProfileImage2 from '../assets/images/UserProfile2.png';
 import PieChart from '../assets/images/Pie.png';
+import { useUser } from '../contexts/User';
 
 export default function ProfilePage() {
+  const { userData } = useUser();
+
   return (
     <div className="bg-[#F5F5F5] min-h-screen">
-      {/* Header */}
       <Header />
 
-      {/* Main Content */}
       <section className="pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Top Banner */}
         <div className="bg-[#2A9D8F] rounded-2xl p-6 text-white mb-8 flex items-center justify-between">
           <h2 className="font-semibold text-xl tracking-wide">MY PROFILE</h2>
           <button className="bg-white/90 text-[#2A9D8F] px-6 py-2 rounded-lg text-sm font-medium hover:bg-white transition-colors">
@@ -19,11 +20,8 @@ export default function ProfilePage() {
           </button>
         </div>
 
-        {/* Profile Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-8">
-          {/* Left Card */}
           <div className="bg-white rounded-2xl shadow-sm p-8">
-            {/* Profile Picture */}
             <div className="flex items-center space-x-4 mb-8">
               <img
                 src={ProfileImage2}
@@ -35,12 +33,12 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            {/* User Information */}
             <div className="space-y-6">
               {[
-                { label: 'Your Name', value: 'Sid' },
-                { label: 'Email', value: 'siddxd@growthx.com' },
-                { label: 'Phone Number', value: '+91 49652845732' },
+                { label: 'Your Name', value: userData?.name || 'N/A' },
+                { label: 'Email', value: userData?.email || 'N/A' },
+                { label: 'Phone Number', value: userData?.phone || 'N/A' },
+                { label: 'Kost Name', value: userData?.kostName || 'N/A' },
               ].map((item, index) => (
                 <div key={index} className="space-y-1">
                   <p className="text-gray-600 text-sm">{item.label}</p>
@@ -53,7 +51,6 @@ export default function ProfilePage() {
                 </div>
               ))}
 
-              {/* About Kos */}
               <div className="pt-2">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-gray-900 font-medium text-lg">
@@ -64,12 +61,13 @@ export default function ProfilePage() {
                   </button>
                 </div>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Jl. Ir. Soekarno No.309, Margalaksana, Hegarmanah, Kec. Jatinangor, Kabupaten Sumedang, Jawa Barat
-                  45363
+                  {userData?.kostName ? `Kost Name: ${userData.kostName}` : 'No Kost Name'}
+                </p>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  {userData?.kostLocation ? `Location: ${userData.kostLocation}` : 'No Kost Location'}
                 </p>
               </div>
 
-              {/* Status */}
               <div className="pt-2">
                 <h3 className="text-gray-900 font-medium text-lg mb-4">Status</h3>
                 <div className="space-y-3">
@@ -90,9 +88,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Right Card */}
           <div className="bg-white rounded-2xl shadow-sm p-8">
-            {/* Total Expenses */}
             <div className="mb-8">
               <h3 className="text-gray-900 font-medium text-lg mb-1">Total Expenses</h3>
               <p className="text-sm text-gray-600 mb-6">Rp 250.000,00 by January 2025</p>
@@ -107,7 +103,6 @@ export default function ProfilePage() {
                     <div className="w-3 h-3 rounded-full bg-[#4169E1]"></div>
                     <span className="text-sm text-gray-600">Water</span>
                   </div>
-                  <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-[#FF6B6B]"></div>
                     <span className="text-sm text-gray-600">Cleaning</span>
                   </div>
@@ -115,7 +110,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Kos Review */}
             <div className="mb-8">
               <h3 className="text-gray-900 font-medium text-lg mb-4">Kos Review</h3>
               <div className="relative rounded-2xl overflow-hidden">
@@ -125,13 +119,12 @@ export default function ProfilePage() {
                   className="w-full h-48 object-cover"
                 />
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                  <h4 className="text-white font-medium">Dreamsville House</h4>
-                  <p className="text-white/80 text-sm">Jl. Sultan Iskandar Muda, Jakarta selatan</p>
+                  <h4 className="text-white font-medium">{userData?.kostName || 'Dreamsville House'}</h4>
+                  <p className="text-white/80 text-sm">{userData?.kostLocation || 'Jl. Sultan Iskandar Muda, Jakarta selatan'}</p>
                 </div>
               </div>
             </div>
 
-            {/* Ratings */}
             <div className="mb-8">
               <h3 className="text-gray-900 font-medium text-lg mb-1">Ratings</h3>
               <div className="flex items-center justify-between bg-[#F5F5F5] p-4 rounded-xl">
@@ -147,7 +140,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Customer Reviews */}
             <div>
               <h3 className="text-gray-900 font-medium text-lg mb-4">Customer Reviews</h3>
               <div className="bg-[#F5F5F5] p-4 rounded-xl mb-4">

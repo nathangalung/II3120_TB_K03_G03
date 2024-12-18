@@ -1,0 +1,160 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  phone     String?
+  kostName  String?
+  kost      Kost?     @relation(fields: [kostName], references: [name])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  orders    Order[]
+  payments  Payment[]
+  waterDeliveryHistories WaterDeliveryHistory[]
+  laundryDeliveryHistories LaundryDeliveryHistory[]
+  cleaningServiceHistories CleaningServiceHistory[]
+}
+
+model Kost {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  location          String
+  hasWaterDelivery  Boolean  @default(false)
+  hasLaundryDelivery Boolean @default(false)  
+  hasCleaningService Boolean @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  users             User[]
+  payments          Payment[]
+}
+
+model WaterDelivery {
+  id        String    @id @default(cuid())
+  brand     String
+  size      String
+  price     Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  histories WaterDeliveryHistory[]
+}
+
+model CleaningService {
+  id            String    @id @default(cuid())
+  name          String
+  timeAvailable String
+  location      String
+  price         Float
+  rating        Float?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  histories     CleaningServiceHistory[]
+}
+
+model LaundryDelivery {
+  id             String    @id @default(cuid())
+  brand          String
+  timeAvailable  String
+  location       String
+  clothPrice     Float
+  helmPrice      Float
+  bedcoverPrice  Float
+  othersPrice    Float?
+  duration       String
+  rating         Float?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
+  histories      LaundryDeliveryHistory[]
+}
+
+model Order {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  serviceType String    // 'WATER', 'LAUNDRY', 'CLEANING'
+  status      String    // 'PENDING', 'COMPLETED', 'CANCELLED'
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  payment     Payment?
+  waterDeliveryHistories WaterDeliveryHistory[]
+  laundryDeliveryHistories LaundryDeliveryHistory[]
+  cleaningServiceHistories CleaningServiceHistory[]
+}
+
+model Payment {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id])
+  amount            Float
+  serviceType       String    // 'KOST', 'WATER', 'LAUNDRY', 'CLEANING'
+  paymentType       String    // 'FULL', 'INSTALLMENT_2', 'INSTALLMENT_3', 'INSTALLMENT_6', 'INSTALLMENT_12'
+  installmentCount  Int?
+  totalInstallments Int?
+  kostName          String?
+  kost              Kost?     @relation(fields: [kostName], references: [name])
+  orderId           String?   @unique
+  order             Order?    @relation(fields: [orderId], references: [id])
+  paymentStatus     String    // 'PENDING', 'PARTIAL', 'COMPLETED', 'FAILED'
+  nextPaymentDate   DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @default(now())
+  waterDeliveryHistories WaterDeliveryHistory[]
+  laundryDeliveryHistories LaundryDeliveryHistory[]
+  cleaningServiceHistories CleaningServiceHistory[]
+}
+
+model WaterDeliveryHistory {
+  id              String       @id @default(cuid())
+  orderId         String
+  order           Order        @relation(fields: [orderId], references: [id])
+  paymentId       String
+  payment         Payment      @relation(fields: [paymentId], references: [id])
+  waterDeliveryId String
+  waterDelivery   WaterDelivery @relation(fields: [waterDeliveryId], references: [id])
+  userId          String
+  user            User         @relation(fields: [userId], references: [id])
+  quantity        Int
+  totalPrice      Float
+  createdAt       DateTime     @default(now())
+}
+
+model LaundryDeliveryHistory {
+  id                String         @id @default(cuid())
+  orderId           String
+  order             Order          @relation(fields: [orderId], references: [id])
+  paymentId         String
+  payment           Payment        @relation(fields: [paymentId], references: [id])
+  laundryDeliveryId String
+  laundryDelivery   LaundryDelivery @relation(fields: [laundryDeliveryId], references: [id])
+  userId            String
+  user              User           @relation(fields: [userId], references: [id])
+  clothWeight       Float?
+  helmQuantity      Int?
+  bedcoverQuantity  Int?
+  othersDescription String?
+  totalPrice        Float
+  createdAt         DateTime       @default(now())
+}
+
+model CleaningServiceHistory {
+  id                String         @id @default(cuid())
+  orderId           String
+  order             Order          @relation(fields: [orderId], references: [id])
+  paymentId         String
+  payment           Payment        @relation(fields: [paymentId], references: [id])
+  cleaningServiceId String
+  cleaningService   CleaningService @relation(fields: [cleaningServiceId], references: [id])
+  userId            String
+  user              User           @relation(fields: [userId], references: [id])
+  duration          String
+  totalPrice        Float
+  createdAt         DateTime       @default(now())
+}
