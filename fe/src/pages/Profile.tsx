@@ -51,56 +51,61 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-6">
-              {[
-                { label: 'Your Name', value: userData?.name || 'N/A' },
-                { label: 'Email', value: userData?.email || 'N/A' },
-                { label: 'Phone Number', value: userData?.phone || 'N/A' },
-                { label: 'Kost Name', value: userData?.kostName || 'N/A' },
-              ].map((item, index) => (
-                <div key={index} className="space-y-1">
-                  <p className="text-gray-600 text-sm">{item.label}</p>
-                  <div className="flex justify-between items-center">
-                    <p className="text-gray-900">{item.value}</p>
+              <div className='p-2 border-2 rounded-lg'>
+                {[
+                  { label: 'Your Name', value: userData?.name || 'N/A' },
+                  { label: 'Email', value: userData?.email || 'N/A' },
+                  { label: 'Phone Number', value: userData?.phone || 'N/A' },
+                  { label: 'Kost Name', value: userData?.kostName || 'N/A' },
+                ].map((item, index) => (
+                  <div key={index} className="space-y-1">
+                    <p className="text-gray-600 text-sm">{item.label}</p>
+                    <div className="flex justify-between items-center">
+                      <p className="text-gray-900">{item.value}</p>
+                      <button className="text-sm bg-[#F5F5F5] text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className='p-2 border-2 rounded-lg '>
+                <div className="pt-2">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-gray-900 font-medium text-lg">
+                      About <span className="text-[#2A9D8F]">Kos</span>
+                    </h3>
                     <button className="text-sm bg-[#F5F5F5] text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-                      Edit
+                      View
                     </button>
                   </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {userData?.kostName ? `Kost Name: ${userData.kostName}` : 'No Kost Name'}
+                  </p>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {kostLocation ? `Location: ${kostLocation}` : 'No Kost Location'}
+                  </p>
                 </div>
-              ))}
-
-              <div className="pt-2">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-gray-900 font-medium text-lg">
-                    About <span className="text-[#2A9D8F]">Kos</span>
-                  </h3>
-                  <button className="text-sm bg-[#F5F5F5] text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-                    View
-                  </button>
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {userData?.kostName ? `Kost Name: ${userData.kostName}` : 'No Kost Name'}
-                </p>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {kostLocation ? `Location: ${kostLocation}` : 'No Kost Location'}
-                </p>
               </div>
-
-              <div className="pt-2">
-                <h3 className="text-gray-900 font-medium text-lg mb-4">Status</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Payment Status</span>
-                    <span className="text-red-500 bg-red-50 px-4 py-1.5 rounded-lg text-sm">
-                      Unpaid
-                    </span>
+              
+              <div className='p-2 border-2 rounded-lg '>
+                <div className="pt-2">
+                  <h3 className="text-gray-900 font-medium text-lg mb-4">Status</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Payment Status</span>
+                      <span className="text-red-500 bg-red-50 px-4 py-1.5 rounded-lg text-sm">
+                        Unpaid
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Continuation Status</span>
+                      <span className="text-emerald-500 bg-emerald-50 px-4 py-1.5 rounded-lg text-sm">
+                        Verified
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Continuation Status</span>
-                    <span className="text-emerald-500 bg-emerald-50 px-4 py-1.5 rounded-lg text-sm">
-                      Verified
-                    </span>
-                  </div>
-                </div>
+              </div>
               </div>
             </div>
           </div>
@@ -109,8 +114,8 @@ export default function ProfilePage() {
             <div className="mb-8">
               <h3 className="text-gray-900 font-medium text-lg mb-1">Total Expenses</h3>
               <p className="text-sm text-gray-600 mb-6">Rp 250.000,00 by January 2025</p>
-              <div className="relative w-48 mx-auto">
-                <img src={PieChart} alt="Expenses breakdown" className="w-full" />
+              <div className="relative w-72 mx-auto">
+                <img src={PieChart} alt="Expenses breakdown" className="w-48" />
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 space-y-2">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-[#FFD700]"></div>
@@ -174,8 +179,8 @@ export default function ProfilePage() {
                 </div>
                 <p className="text-gray-600">excellent service.</p>
               </div>
-              <button className="text-red-500 text-sm hover:underline">
-                See all reviews →
+              <button className="text-white text-sm font-bold bg-red-500 w-full h-10 rounded-lg hover:underline">
+                Log out
               </button>
             </div>
           </div>

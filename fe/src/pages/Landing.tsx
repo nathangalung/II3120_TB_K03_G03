@@ -81,8 +81,8 @@ export default function LandingPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col lg:flex-row bg-white overflow-hidden">
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-20">
+    <main className="min-h-screen flex flex-col md:flex-row bg-white overflow-hidden">
+      <div className="w-full md:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-0">
         <div className="w-full max-w-[400px]">
         {error && showError && (
           <div className={`p-4 mb-4 rounded-md text-left ${
@@ -274,7 +274,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <div className="hidden lg:block lg:w-1/2 h-full absolute top-0 right-0">
+      <div className="hidden md:block md:w-1/2 h-full absolute top-0 right-0">
         <img
           src={LandingImage}
           alt="Modern house with pool"

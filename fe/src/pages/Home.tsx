@@ -28,10 +28,13 @@ export default function HomePage() {
         </h1>
 
         {/* Description */}
-        <p className="text-sm sm:text-lg max-w-2xl mb-12 leading-relaxed">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-          when an unknown printer took a galley of type and scrambled.
+        <p className="text-sm sm:text-lg max-w-2xl lg:max-w-4xl mb-12 leading-relaxed">
+        wadah terpusat layanan penghuni kos mulai dari pembayaran, galon, laundry, 
+        dan cleaning service. Dengan mengintegrasikan layanan seperti pembayaran sewa, 
+        laundry, pengisian air, dan pembersihan, platform ini menawarkan kemudahan akses, 
+        efisiensi transaksi, dan manajemen yang lebih baik. Visi utamanya adalah menciptakan 
+        ekosistem kos yang nyaman sekaligus mendukung usaha lokal.
+
         </p>
 
         {/* Service Icons */}
@@ -56,7 +59,8 @@ export default function HomePage() {
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 border border-white rounded-lg flex items-center justify-center bg-white/10">
               <img
-                src="https://img.icons8.com/ios/50/ffffff/cleaning.png"
+                src="https://img.icons8.com/?size=100&id=44cEkGiz0I9d&format=png&color=ffffff"
+                
                 alt="Cleaning Service"
               />
             </div>

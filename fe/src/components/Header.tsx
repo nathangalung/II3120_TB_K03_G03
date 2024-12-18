@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <header
       className={`w-full fixed top-0 left-0 right-0 flex items-center justify-between px-4 sm:px-8 py-4 z-50 
-        ${isHome ? 'bg-white/30 backdrop-blur-md' : 'bg-white shadow-md'}`}
+        ${isHome ? 'bg-white/50 backdrop-blur-md' : 'bg-white shadow-md'}`}
     >
       <div className="flex items-center space-x-2">
         <Link to="/home">
