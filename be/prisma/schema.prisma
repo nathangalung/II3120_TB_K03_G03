@@ -17,6 +17,8 @@ model User {
   kost      Kost?     @relation(fields: [kostName], references: [name])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  kostStatus    KostStatus[]
+  kostHistory   KostHistory[]
   orders    Order[]
   payments  Payment[]
   waterDeliveryHistories WaterDeliveryHistory[]
@@ -28,12 +30,15 @@ model Kost {
   id                String   @id @default(cuid())
   name              String   @unique
   location          String
+  rating            Float?   @default(0)
   hasWaterDelivery  Boolean  @default(false)
   hasLaundryDelivery Boolean @default(false)  
   hasCleaningService Boolean @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   users             User[]
+  kostStatus        KostStatus[]
+  kostHistory       KostHistory[]
   payments          Payment[]
 }
 
@@ -79,9 +84,11 @@ model Order {
   id          String    @id @default(cuid())
   userId      String
   user        User      @relation(fields: [userId], references: [id])
-  serviceType String    // 'WATER', 'LAUNDRY', 'CLEANING'
+  serviceType String    // 'KOST', 'WATER', 'LAUNDRY', 'CLEANING'
   status      String    // 'PENDING', 'COMPLETED', 'CANCELLED'
-  amount      Int       // Amount to be charged
+  amount      Int       // Quantity/months
+  totalPrice  Float     // Total amount to be paid
+  details     String?   // JSON string containing calculation details
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
   payment     Payment?
@@ -110,6 +117,32 @@ model Payment {
   waterDeliveryHistories WaterDeliveryHistory[]
   laundryDeliveryHistories LaundryDeliveryHistory[]
   cleaningServiceHistories CleaningServiceHistory[]
+}
+
+model KostStatus {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  kostId          String
+  kost            Kost      @relation(fields: [kostId], references: [id])
+  monthlyPrice    Float
+  penaltyFee      Float     @default(10000)
+  paymentStatus   String    // 'PAID', 'UNPAID', 'DELAYED'
+  delayDays       Int?      // Number of days delayed, if applicable
+  continuousType  String    // '1', '3', '6', '12' (months)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model KostHistory {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])  
+  kostId          String
+  kost            Kost      @relation(fields: [kostId], references: [id])
+  payment         Float     // Amount paid
+  continuous      String    // '1', '3', '6', '12' (months)
+  createdAt       DateTime  @default(now())
 }
 
 model WaterDeliveryHistory {

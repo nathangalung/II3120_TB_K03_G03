@@ -5,11 +5,21 @@ export class AuthController {
   static async register(c: Context) {
     try {
       const data = await c.req.json();
+      if (!data.name || !data.email || !data.password || !data.kostName) {
+        return c.json({ 
+          success: false, 
+          message: 'Missing required fields' 
+        }, 400);
+      }
+
       const result = await AuthService.register(data);
       return c.json(result);
     } catch (error) {
       const errorMessage = (error as Error).message;
-      return c.json({ success: false, message: errorMessage }, 400);
+      return c.json({ 
+        success: false, 
+        message: errorMessage 
+      }, 400);
     }
   }
 

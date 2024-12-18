@@ -4,7 +4,9 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { userRoutes } from './routes/user';
 import { authRoutes } from './routes/auth';
+import { kostRoutes } from './routes/kost';
 import { paymentRoutes } from './routes/payment';
+import { serviceRoutes } from './routes/service';
 import prisma from './config/prisma';
 
 const app = new Hono();
@@ -14,7 +16,9 @@ app.use('*', cors());
 
 app.route('/api/users', userRoutes);
 app.route('/api/auth', authRoutes);
+app.route('/api/kosts', kostRoutes);
 app.route('/api/payment', paymentRoutes);
+app.route('/api/services', serviceRoutes);
 
 app.get('/', async (c) => {
   try {

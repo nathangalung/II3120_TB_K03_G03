@@ -26,4 +26,27 @@ export class UserController {
       return c.json({ success: false, message: errorMessage }, 500);
     }
   }
+
+  static async updateUser(c: Context) {
+    try {
+      const userId = c.req.param('id');
+      const updates = await c.req.json();
+      
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: updates,
+      });
+
+      return c.json({ 
+        success: true, 
+        data: updatedUser 
+      });
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return c.json({ 
+        success: false, 
+        error: 'Failed to update user' 
+      }, 500);
+    }
+  }
 }

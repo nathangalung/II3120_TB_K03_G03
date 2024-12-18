@@ -4,10 +4,13 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
     "strict": true,
     "lib": ["ESNext"],
     "types": ["node"],
-    "outDir": "dist"
+    "outDir": "dist",
+    
   },
   "include": ["src"],
   "exclude": ["node_modules"]

@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import BackgroundImage from '../assets/images/Background.png';
+import WaterImage from "../assets/images/services/Water1.png";
+import LaundryImage from "../assets/images/services/laundry1.png";
+import CleaningImage from "../assets/images/services/cleaning1.png";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -29,7 +32,7 @@ export default function HomePage() {
 
         {/* Description */}
         <p className="text-sm sm:text-lg max-w-2xl lg:max-w-4xl mb-12 leading-relaxed">
-        wadah terpusat layanan penghuni kos mulai dari pembayaran, galon, laundry, 
+        Wadah terpusat layanan penghuni kos mulai dari pembayaran, galon, laundry, 
         dan cleaning service. Dengan mengintegrasikan layanan seperti pembayaran sewa, 
         laundry, pengisian air, dan pembersihan, platform ini menawarkan kemudahan akses, 
         efisiensi transaksi, dan manajemen yang lebih baik. Visi utamanya adalah menciptakan 
@@ -39,18 +42,18 @@ export default function HomePage() {
 
         {/* Service Icons */}
         <div className="flex space-x-12 mb-12">
-          {/* Galoon */}
+          {/* Water */}
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 border border-white rounded-lg flex items-center justify-center bg-white/10">
-              <img src="https://img.icons8.com/ios/50/ffffff/water.png" alt="Galoon" />
+              <img src={WaterImage} alt="Galoon" />
             </div>
-            <p className="mt-2 text-sm font-medium">Galoon</p>
+            <p className="mt-2 text-sm font-medium">Water</p>
           </div>
 
           {/* Laundry */}
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 border border-white rounded-lg flex items-center justify-center bg-white/10">
-              <img src="https://img.icons8.com/ios/50/ffffff/t-shirt.png" alt="Laundry" />
+              <img src={LaundryImage} alt="Laundry" />
             </div>
             <p className="mt-2 text-sm font-medium">Laundry</p>
           </div>
@@ -59,12 +62,9 @@ export default function HomePage() {
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 border border-white rounded-lg flex items-center justify-center bg-white/10">
               <img
-                src="https://img.icons8.com/?size=100&id=44cEkGiz0I9d&format=png&color=ffffff"
-                
-                alt="Cleaning Service"
-              />
+                src={CleaningImage} alt="Cleaning Service" />
             </div>
-            <p className="mt-2 text-sm font-medium">Cleaning Service</p>
+            <p className="mt-2 text-sm font-medium">Cleaning</p>
           </div>
         </div>
 

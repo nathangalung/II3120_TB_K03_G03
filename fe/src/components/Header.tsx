@@ -27,20 +27,20 @@ const Header = () => {
 
       <nav className="hidden md:flex items-center space-x-8">
         <Link
-          to="/payment"
+          to="/kost"
           className={`font-medium ${
             isPayment ? 'text-teal-600' : 'text-gray-700 hover:text-teal-600'
           }`}
         >
-          Payment
+          Kost Payment
         </Link>
         <Link
-          to="/order"
+          to="/service"
           className={`font-medium ${
             isOrder ? 'text-teal-600' : 'text-gray-700 hover:text-teal-600'
           }`}
         >
-          Order
+          Service Order
         </Link>
       </nav>
 

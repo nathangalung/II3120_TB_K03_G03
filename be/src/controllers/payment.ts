@@ -12,24 +12,34 @@ const snap = new midtransClient.Snap({
 export class PaymentController {
   static async createTransaction(c: Context) {
     try {
-      const { order_id, gross_amount, user_id, name, phone, email } = await c.req.json();
-
+      const { 
+        order_id, 
+        gross_amount, 
+        user_id, 
+        name, 
+        phone, 
+        email,
+        payment_type,
+        amount,
+        totalPrice,
+        details
+      } = await c.req.json();
+  
       const parameter = {
         transaction_details: {
           order_id,
           gross_amount,
         },
         customer_details: {
-          user_id,
-          name,
-          phone,
+          first_name: name,
           email,
+          phone,
         },
         credit_card: {
-          secure: true,
-        },
+          secure: true
+        }
       };
-
+  
       const authString = Buffer.from(`SB-Mid-server-Hj0xm3VgzEqepViWXD41Z0lu:`).toString('base64');
       const response = await fetch('https://app.sandbox.midtrans.com/snap/v1/transactions', {
         method: 'POST',
@@ -39,27 +49,47 @@ export class PaymentController {
         },
         body: JSON.stringify(parameter),
       });
-
+  
       const data = await response.json();
+  
       if (response.ok) {
-        // Create order in the database
-        await prisma.order.create({
+        // Create order record
+        const order = await prisma.order.create({
           data: {
-            id: order_id,
             userId: user_id,
-            serviceType: 'KOST', // Example service type
+            serviceType: payment_type,
             status: 'PENDING',
-            amount: gross_amount,
-          },
+            amount: amount,
+            totalPrice: totalPrice,
+            details: details
+          }
         });
-
+  
+        // Create payment record
+        await prisma.payment.create({
+          data: {
+            userId: user_id,
+            amount: totalPrice,
+            serviceType: payment_type,
+            paymentType: 'MIDTRANS',
+            paymentStatus: 'PENDING',
+            orderId: order.id
+          }
+        });
+  
         return c.json({ token: data.token });
-      } else {
-        return c.json({ success: false, message: data.message }, response.status);
       }
+      return c.json({ 
+        success: false, 
+        message: data.message || 'Failed to create transaction' 
+      }, response.status);
+  
     } catch (error) {
-      const errorMessage = (error as Error).message;
-      return c.json({ success: false, message: errorMessage }, 500);
+      console.error('Payment error:', error);
+      return c.json({ 
+        success: false, 
+        message: 'Internal server error' 
+      }, 500);
     }
   }
 }

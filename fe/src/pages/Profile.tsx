@@ -3,27 +3,150 @@ import KostImage from '../assets/images/Kost.png';
 import ProfileImage2 from '../assets/images/UserProfile2.png';
 import PieChart from '../assets/images/Pie.png';
 import { useUser } from '../contexts/User';
+import { useAuth } from '../contexts/Auth';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 export default function ProfilePage() {
-  const { userData } = useUser();
-  const [kostLocation, setKostLocation] = useState('');
+  const { userData, setUserData } = useUser();
+  const { logout } = useAuth();
+  const [kostData, setKostData] = useState({ location: '', rating: 0 });
+  const [isEditing, setIsEditing] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState('');
+  const [kostStatus, setKostStatus] = useState({
+    paymentStatus: 'UNPAID',
+    continuousType: '0',
+    delayDays: 0
+  });
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (userData?.id) {
+      const fetchKostStatus = () => {
+        fetch(`http://localhost:3000/api/kosts/status/${userData.id}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              setKostStatus(data.data);
+            }
+          })
+          .catch(err => console.error('Error fetching kost status:', err));
+      };
+  
+      fetchKostStatus();
+      // Refresh status every 30 seconds
+      const intervalId = setInterval(fetchKostStatus, 30000);
+  
+      return () => clearInterval(intervalId);
+    }
+  }, [userData?.id]);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'PAID': return 'text-emerald-500 bg-emerald-50';
+      case 'UNPAID': return 'text-yellow-500 bg-yellow-50';
+      case 'DELAYED': return 'text-red-500 bg-red-50';
+      default: return 'text-gray-500 bg-gray-50';
+    }
+  };
 
   useEffect(() => {
     if (userData?.kostName) {
       fetch(`http://localhost:3000/api/kosts?name=${userData.kostName}`)
         .then(response => response.json())
         .then(data => {
-          if (data.length > 0) {
-            const kost = data.find(k => k.name === userData.kostName);
-            if (kost) {
-              setKostLocation(kost.location);
-            }
+          if (data.success) {
+            setKostData({
+              location: data.data.location,
+              rating: data.data.rating
+            });
           }
         })
-        .catch(error => console.error('Error fetching kost location:', error));
+        .catch(error => console.error('Error fetching kost data:', error));
     }
   }, [userData?.kostName]);
+
+  const handleEdit = (field: string, value: string) => {
+    setIsEditing(field);
+    setEditValue(value);
+  };
+
+  const handleSave = async () => {
+    if (!isEditing || !userData?.id) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/users/${userData.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          [isEditing]: editValue
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setUserData({
+          ...userData,
+          [isEditing]: editValue
+        });
+        setIsEditing(null);
+      } else {
+        alert('Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile');
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const renderEditableField = (item: { label: string; value: string }) => (
+    <div key={item.label} className="space-y-1">
+      <p className="text-gray-600 text-sm">{item.label}</p>
+      <div className="flex justify-between items-center">
+        {isEditing === item.label.toLowerCase() ? (
+          <div className="flex gap-2 flex-1">
+            <input
+              type="text"
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              className="flex-1 px-2 py-1 border rounded"
+            />
+            <button
+              onClick={handleSave}
+              className="text-sm bg-green-500 text-white px-4 py-1.5 rounded-lg hover:bg-green-600 transition-colors"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => setIsEditing(null)}
+              className="text-sm bg-gray-500 text-white px-4 py-1.5 rounded-lg hover:bg-gray-600 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <>
+            <p className="text-gray-900">{item.value}</p>
+            <button
+              onClick={() => handleEdit(item.label.toLowerCase(), item.value)}
+              className="text-sm bg-[#F5F5F5] text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              Edit
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div className="bg-[#F5F5F5] min-h-screen">
@@ -57,17 +180,7 @@ export default function ProfilePage() {
                   { label: 'Email', value: userData?.email || 'N/A' },
                   { label: 'Phone Number', value: userData?.phone || 'N/A' },
                   { label: 'Kost Name', value: userData?.kostName || 'N/A' },
-                ].map((item, index) => (
-                  <div key={index} className="space-y-1">
-                    <p className="text-gray-600 text-sm">{item.label}</p>
-                    <div className="flex justify-between items-center">
-                      <p className="text-gray-900">{item.value}</p>
-                      <button className="text-sm bg-[#F5F5F5] text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-                        Edit
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                ].map(item => renderEditableField(item))}
               </div>
               <div className='p-2 border-2 rounded-lg '>
                 <div className="pt-2">
@@ -79,12 +192,12 @@ export default function ProfilePage() {
                       View
                     </button>
                   </div>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <div className="text-gray-600 text-sm leading-relaxed">
                     {userData?.kostName ? `Kost Name: ${userData.kostName}` : 'No Kost Name'}
-                  </p>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {kostLocation ? `Location: ${kostLocation}` : 'No Kost Location'}
-                  </p>
+                  </div>
+                  <div className="text-gray-600 text-sm leading-relaxed">
+                    {kostData.location ? `Location: ${kostData.location}` : 'No Kost Location'}
+                  </div>
                 </div>
               </div>
               
@@ -93,19 +206,20 @@ export default function ProfilePage() {
                   <h3 className="text-gray-900 font-medium text-lg mb-4">Status</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Payment Status</span>
-                      <span className="text-red-500 bg-red-50 px-4 py-1.5 rounded-lg text-sm">
-                        Unpaid
+                      <span className="text-gray-600">Kost Payment Status</span>
+                      <span className={`px-4 py-1.5 rounded-lg text-sm ${getStatusColor(kostStatus.paymentStatus)}`}>
+                        {kostStatus.paymentStatus}
+                        {kostStatus.paymentStatus === 'DELAYED' && ` (${kostStatus.delayDays} days)`}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Continuation Status</span>
-                      <span className="text-emerald-500 bg-emerald-50 px-4 py-1.5 rounded-lg text-sm">
-                        Verified
+                      <span className="text-gray-600">Kost Continuation</span>
+                      <span className="text-teal-500 bg-teal-50 px-4 py-1.5 rounded-lg text-sm">
+                        {kostStatus.continuousType} Month(s)
                       </span>
                     </div>
                   </div>
-              </div>
+                </div>
               </div>
             </div>
           </div>
@@ -143,7 +257,7 @@ export default function ProfilePage() {
                 />
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
                   <h4 className="text-white font-medium">{userData?.kostName || 'Dreamsville House'}</h4>
-                  <p className="text-white/80 text-sm">{kostLocation || 'Jl. Sultan Iskandar Muda, Jakarta selatan'}</p>
+                  <p className="text-white/80 text-sm">{kostData.location || 'Jl. Sultan Iskandar Muda, Jakarta selatan'}</p>
                 </div>
               </div>
             </div>
@@ -163,23 +277,23 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div>
-              <h3 className="text-gray-900 font-medium text-lg mb-4">Customer Reviews</h3>
-              <div className="bg-[#F5F5F5] p-4 rounded-xl mb-4">
-                <p className="font-medium text-gray-900 mb-2">Ankit Srivastava</p>
-                <div className="flex gap-1 mb-2">
-                  {[1, 2, 3, 4].map((star) => (
-                    <svg key={star} className="w-5 h-5 text-[#FFD700]" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                  <svg className="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+            <div className="mb-8">
+              <h3 className="text-gray-900 font-medium text-lg mb-1">Ratings</h3>
+              <div className="flex items-center justify-between bg-[#F5F5F5] p-4 rounded-xl">
+                <div>
+                  <p className="text-gray-900 font-medium">{kostData.rating} Stars</p>
+                  <p className="text-sm text-gray-600">Average Rating</p>
+                </div>
+                <div className="bg-[#FFD700] p-3 rounded-xl">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 </div>
-                <p className="text-gray-600">excellent service.</p>
               </div>
-              <button className="text-white text-sm font-bold bg-red-500 w-full h-10 rounded-lg hover:underline">
+              <button 
+                onClick={handleLogout}
+                className="text-white text-sm font-bold bg-red-500 w-full h-10 rounded-lg hover:bg-red-600 transition-colors mt-4"
+              >
                 Log out
               </button>
             </div>

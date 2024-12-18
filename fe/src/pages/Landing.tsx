@@ -59,24 +59,25 @@ export default function LandingPage() {
       email: (form.elements.namedItem('signup-email') as HTMLInputElement).value,
       password: (form.elements.namedItem('signup-password') as HTMLInputElement).value,
     };
-
+  
     try {
       const response = await fetch('http://localhost:3000/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-
+  
       const result = await response.json();
-
+  
       if (response.ok) {
         setIsLogin(true);
         setError('Registration successful! Please sign in.');
       } else {
-        setError(result.message || 'Registration failed');
+        setError(result.message || 'Registration failed. Please try again.');
       }
     } catch (err) {
       setError('Server error: Unable to connect to registration service');
+      console.error('Registration error:', err);
     }
   };
 

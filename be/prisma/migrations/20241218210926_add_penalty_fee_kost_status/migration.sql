@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "KostStatus" ADD COLUMN     "penaltyFee" DOUBLE PRECISION NOT NULL DEFAULT 10000;
