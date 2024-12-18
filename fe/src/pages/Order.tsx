@@ -113,18 +113,44 @@ export default function OrderPage() {
       {/* Header */}
       <Header />
 
-      {/* Main Section */}
-      <div className="max-w-7xl mx-auto flex gap-6 py-8 px-4">
-        {/* Service Menu */}
-        <Menu selectedService={selectedService} onSelectService={setSelectedService} />
+      <div className="p-8 flex-col gap-6 pt-24">
 
-        {/* Service Content */}
-        <div className="flex-1 bg-gray-50 p-4 rounded-lg shadow-lg">
-          {renderServiceContent()}
-          <div className="flex justify-end mt-6">
-            <button className="bg-[#76C7C0] text-white px-6 py-2 rounded-lg shadow-md hover:bg-[#5ba9a1]">
-              Order Now
-            </button>
+        {/* Step Indicator */}
+        <div className="flex justify-center items-center space-x-4 mb-4">
+          <div className="flex items-center text-teal-500">
+            <div className="w-6 h-6 rounded-full border-2 border-teal-500 flex items-center justify-center font-bold">1</div>
+            <span className="ml-2 font-medium">Order</span>
+          </div>
+          <div className="w-12 h-[2px] bg-gray-300"></div>
+          <div className="flex items-center text-gray-300">
+            <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold">2</div>
+            <span className="ml-2 font-medium">Payment</span>
+          </div>
+          <div className="w-12 h-[2px] bg-gray-300"></div>
+          <div className="flex items-center text-gray-300">
+            <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold">3</div>
+            <span className="ml-2 font-medium">Delivery</span>
+          </div>
+          <div className="w-12 h-[2px] bg-gray-300"></div>
+          <div className="flex items-center text-gray-300">
+            <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold">4</div>
+            <span className="ml-2 font-medium">Confirm</span>
+          </div>
+        </div>
+
+        {/* Main Section */}
+        <div className="max-w-7xl mx-auto flex gap-6 py-8 px-4">
+          {/* Service Menu */}
+          <Menu selectedService={selectedService} onSelectService={setSelectedService} />
+
+          {/* Service Content */}
+          <div className="flex-1 bg-gray-50 p-4 rounded-lg shadow-lg">
+            {renderServiceContent()}
+            <div className="flex justify-end mt-6">
+              <button className="bg-[#76C7C0] text-white px-6 py-2 rounded-lg shadow-md hover:bg-[#5ba9a1]">
+                Order Now
+              </button>
+            </div>
           </div>
         </div>
       </div>

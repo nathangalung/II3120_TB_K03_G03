@@ -38,7 +38,7 @@ export default function LandingPage() {
       const data = await response.json();
 
       if (response.ok) {
-        login(data.token);
+        login(data.token, data.user);
         navigate('/home');
       } else {
         setError(data.message || 'Invalid email or password');

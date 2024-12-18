@@ -1,13 +1,12 @@
-// be/src/services/user.ts
 import prisma from '../config/prisma';
-import { hashPassword } from '../utils/password'; // Adjust the import path as necessary
+import { hashPassword } from '../utils/password';
 
 export class UserService {
   static async findById(id: string) {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        kost: true, // Include the related Kost data
+        kost: true,
       },
     });
 
@@ -17,7 +16,7 @@ export class UserService {
 
     return {
       ...user,
-      kostLocation: user.kost?.location || null, // Add kostLocation to the user data
+      kostLocation: user.kost?.location || null,
     };
   }
 

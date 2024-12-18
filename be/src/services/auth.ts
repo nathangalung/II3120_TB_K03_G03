@@ -3,38 +3,10 @@ import { hashPassword, comparePassword } from '../utils/password';
 import jwt from 'jsonwebtoken';
 
 export class AuthService {
-  static async register(data: {
-    name: string;
-    email: string;
-    password: string;
-    phone?: string;
-    kostName: string;
-  }) {
-    const existingUser = await prisma.user.findUnique({
-      where: { email: data.email }
-    });
-
-    if (existingUser) {
-      throw new Error('Email already registered');
-    }
-
-    const hashedPassword = await hashPassword(data.password);
-    const user = await prisma.user.create({
-      data: {
-        ...data,
-        password: hashedPassword
-      }
-    });
-
-    return {
-      success: true,
-      message: 'Registration successful'
-    };
-  }
-
   static async login(email: string, password: string) {
     const user = await prisma.user.findUnique({
-      where: { email }
+      where: { email },
+      include: { kost: true }, // Include related Kost data
     });
 
     if (!user) {
@@ -59,8 +31,10 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
-        kostName: user.kostName
-      }
+        phone: user.phone,
+        kostName: user.kostName,
+        kostLocation: user.kost?.location || null,
+      },
     };
   }
 }

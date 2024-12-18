@@ -1,12 +1,29 @@
-// fe/src/pages/Profile.tsx
 import Header from '../components/Header';
 import KostImage from '../assets/images/Kost.png';
 import ProfileImage2 from '../assets/images/UserProfile2.png';
 import PieChart from '../assets/images/Pie.png';
 import { useUser } from '../contexts/User';
+import { useEffect, useState } from 'react';
 
 export default function ProfilePage() {
   const { userData } = useUser();
+  const [kostLocation, setKostLocation] = useState('');
+
+  useEffect(() => {
+    if (userData?.kostName) {
+      fetch(`http://localhost:3000/api/kosts?name=${userData.kostName}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.length > 0) {
+            const kost = data.find(k => k.name === userData.kostName);
+            if (kost) {
+              setKostLocation(kost.location);
+            }
+          }
+        })
+        .catch(error => console.error('Error fetching kost location:', error));
+    }
+  }, [userData?.kostName]);
 
   return (
     <div className="bg-[#F5F5F5] min-h-screen">
@@ -64,7 +81,7 @@ export default function ProfilePage() {
                   {userData?.kostName ? `Kost Name: ${userData.kostName}` : 'No Kost Name'}
                 </p>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  {userData?.kostLocation ? `Location: ${userData.kostLocation}` : 'No Kost Location'}
+                  {kostLocation ? `Location: ${kostLocation}` : 'No Kost Location'}
                 </p>
               </div>
 
@@ -103,6 +120,7 @@ export default function ProfilePage() {
                     <div className="w-3 h-3 rounded-full bg-[#4169E1]"></div>
                     <span className="text-sm text-gray-600">Water</span>
                   </div>
+                  <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-[#FF6B6B]"></div>
                     <span className="text-sm text-gray-600">Cleaning</span>
                   </div>
@@ -120,7 +138,7 @@ export default function ProfilePage() {
                 />
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
                   <h4 className="text-white font-medium">{userData?.kostName || 'Dreamsville House'}</h4>
-                  <p className="text-white/80 text-sm">{userData?.kostLocation || 'Jl. Sultan Iskandar Muda, Jakarta selatan'}</p>
+                  <p className="text-white/80 text-sm">{kostLocation || 'Jl. Sultan Iskandar Muda, Jakarta selatan'}</p>
                 </div>
               </div>
             </div>
