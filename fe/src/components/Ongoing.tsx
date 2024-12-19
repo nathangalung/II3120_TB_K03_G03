@@ -24,7 +24,8 @@ export default function Ongoing({ orders }: OngoingProps) {
     const newCountdowns: { [key: string]: number } = {};
     orders.forEach(order => {
       if (order.status === 'PROGRESS') {
-        newCountdowns[order.id] = 10;
+        const remainingTime = localStorage.getItem(`countdown-${order.id}`);
+        newCountdowns[order.id] = remainingTime ? parseInt(remainingTime) : 10;
       }
     });
     setCountdowns(newCountdowns);
@@ -36,6 +37,7 @@ export default function Ongoing({ orders }: OngoingProps) {
         Object.keys(updated).forEach(orderId => {
           if (updated[orderId] > 0) {
             updated[orderId] -= 1;
+            localStorage.setItem(`countdown-${orderId}`, updated[orderId].toString());
           }
           // When countdown reaches 0, update order status to COMPLETED
           if (updated[orderId] === 0) {
@@ -46,6 +48,8 @@ export default function Ongoing({ orders }: OngoingProps) {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
               },
               body: JSON.stringify({ status: 'COMPLETED' })
+            }).then(() => {
+              localStorage.removeItem(`countdown-${orderId}`);
             });
           }
         });

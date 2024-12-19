@@ -7,7 +7,7 @@ export class OrderController {
       const userId = c.req.param('userId');
       
       const orders = await prisma.order.findMany({
-        where: { userId },
+        where: { userId, serviceType: { not: 'KOST' } }, // Exclude KOST orders
         include: {
           waterDeliveryHistories: true,
           laundryDeliveryHistories: true,
