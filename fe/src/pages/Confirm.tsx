@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import ConfirmImage from '../assets/images/Confirm.png';
 
-export default function ConfirmPage() {
+const ConfirmPage: FC = () => {
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const from = params.get('from');
@@ -37,4 +37,6 @@ export default function ConfirmPage() {
         </div>
       </div>
     );
-  }
+  };
+
+export default ConfirmPage;

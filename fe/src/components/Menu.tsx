@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import LaundryImage1 from "../assets/images/services/Laundry1.png";
 import LaundryImage2 from "../assets/images/services/Laundry2.png";
 import WaterImage1 from "../assets/images/services/Water1.png";
@@ -10,38 +11,38 @@ interface MenuProps {
   onSelectService: (service: string) => void;
 }
 
-const services = [
-  { 
-    label: 'Water Delivery', 
-    hours: '6:00 - 18:00', 
-    key: 'water',
-    image1: WaterImage1,
-    image2: WaterImage2
-  },
-  { 
-    label: 'Laundry Delivery', 
-    hours: '6:00 - 20:00', 
-    key: 'laundry',
-    image1: LaundryImage1,
-    image2: LaundryImage2
-  },
-  { 
-    label: 'Cleaning Service', 
-    hours: '6:00 - 18:00', 
-    key: 'cleaning',
-    image1: CleaningImage1,
-    image2: CleaningImage2
-  },
-  { 
-    label: 'Order History', 
-    hours: '', 
-    key: 'history',
-    image1: null,
-    image2: null
-  }
-];
-
-export default function Menu({ selectedService, onSelectService }: MenuProps) {
+const Menu: FC<MenuProps> = ({ selectedService, onSelectService }) => {
+  const services = [
+    { 
+      label: 'Water Delivery', 
+      hours: '6:00 - 18:00', 
+      key: 'water',
+      image1: WaterImage1,
+      image2: WaterImage2
+    },
+    { 
+      label: 'Laundry Delivery', 
+      hours: '6:00 - 20:00', 
+      key: 'laundry',
+      image1: LaundryImage1,
+      image2: LaundryImage2
+    },
+    { 
+      label: 'Cleaning Service', 
+      hours: '6:00 - 18:00', 
+      key: 'cleaning',
+      image1: CleaningImage1,
+      image2: CleaningImage2
+    },
+    { 
+      label: 'Order History', 
+      hours: '', 
+      key: 'history',
+      image1: null,
+      image2: null
+    }
+  ];
+  
   return (
     <div className="w-full max-w-[300px] bg-white rounded-lg shadow-md p-4">
       <h2 className="text-lg font-bold mb-4 text-center">Service Menu</h2>
@@ -74,4 +75,6 @@ export default function Menu({ selectedService, onSelectService }: MenuProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Menu;

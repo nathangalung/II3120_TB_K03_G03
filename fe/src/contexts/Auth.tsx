@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, type FC } from 'react';
 import { useUser } from './User';
-import { UserData } from '../types';
+import type { UserData } from '../types';
 
 interface AuthContextType {
   token: string | null;

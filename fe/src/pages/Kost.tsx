@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FC } from 'react';
 import KostImage from '../assets/images/Kost.png';
 import Header from '../components/Header';
 import { useUser } from '../contexts/User';
+import type { KostStatus } from '../types';
 
 declare global {
   interface Window {
@@ -18,16 +18,16 @@ type Card = {
   isActive: boolean;
 };
 
-export default function KostPage() {
+const KostPage: FC = () => {
   const { userData } = useUser();
   const [selectedPlan, setSelectedPlan] = useState<'1' | '3' | '6' | '12'>('1');
-  const [kostStatus, setKostStatus] = useState({
-    monthlyPrice: 2500000, // Set default value
-    penaltyFee: 100000, // Set default value
+  const [kostStatus, setKostStatus] = useState<KostStatus>({
+    monthlyPrice: 2500000,
+    penaltyFee: 100000,
     paymentStatus: 'UNPAID',
     delayDays: 0,
     totalCost: 0,
-    continuousType: '0' // Add default value for continuousType
+    continuousType: '0'
   });
   const navigate = useNavigate();
   const steps = ["Plan", "Payment", "Confirm"];
@@ -247,4 +247,6 @@ export default function KostPage() {
       </div>
     </div>
   );
-}
+};
+
+export default KostPage;

@@ -9,7 +9,7 @@ interface CleaningProps {
   onDurationChange: (duration: number) => void;
 }
 
-export default function Cleaning({ services, selectedService, onSelectService, onDurationChange }: CleaningProps) {
+const Cleaning: FC<CleaningProps> = ({ services, selectedService, onSelectService, onDurationChange }) => {
     return (
         <div>
         {services.map((service) => (
@@ -50,4 +50,6 @@ export default function Cleaning({ services, selectedService, onSelectService, o
         ))}
         </div>
     );
-}
+};
+
+export default Cleaning;

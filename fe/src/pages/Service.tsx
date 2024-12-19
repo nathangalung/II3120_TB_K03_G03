@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, type FC } from "react";
 import { useUser } from '../contexts/User';
 import Header from "../components/Header"
 import Menu from "../components/Menu"
@@ -32,7 +32,7 @@ interface Order {
   createdAt: string;
 }
 
-export default function ServicePage() {
+const ServicePage: FC = () => {
   const { userData } = useUser();
   const [selectedService, setSelectedService] = useState("cleaning");
   const [waterServices, setWaterServices] = useState<Service[]>([]);
@@ -486,5 +486,6 @@ export default function ServicePage() {
       </div>
     </div>
   );
-}
+};
 
+export default ServicePage;

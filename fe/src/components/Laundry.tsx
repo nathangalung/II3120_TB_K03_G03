@@ -9,7 +9,7 @@ interface LaundryProps {
   onDetailsChange: (details: any) => void;
 }
 
-export default function Laundry({ services, selectedService, onSelectService, onDetailsChange }: LaundryProps) {
+const Laundry: FC<LaundryProps> = ({ services, selectedService, onSelectService, onDetailsChange }) => {
     return (
         <div>
         {services.map((service) => (
@@ -46,4 +46,6 @@ export default function Laundry({ services, selectedService, onSelectService, on
         ))}
         </div>
     );
-}
+};
+
+export default Laundry;

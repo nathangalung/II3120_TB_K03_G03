@@ -8,7 +8,7 @@ interface WaterProps {
     onQuantityChange: (index: number, delta: number) => void;
 }
 
-export default function Water({ services, waterOrder, onQuantityChange }: WaterProps) {
+const Water: FC<WaterProps> = ({ services, waterOrder, onQuantityChange }) => {
     return (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {services.map((service, idx) => (
@@ -40,4 +40,6 @@ export default function Water({ services, waterOrder, onQuantityChange }: WaterP
         ))}
         </div>
     );
-}
+};
+
+export default Water;
