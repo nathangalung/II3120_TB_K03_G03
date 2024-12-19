@@ -16,6 +16,7 @@ interface UserContextType {
 }
 
 const UserContext = createContext<UserContextType | null>(null);
+const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000';
 
 export const useUser = () => {
   const context = useContext(UserContext);
@@ -30,7 +31,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/users/me', {
+      const response = await fetch(`${API_URL}/api/users/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

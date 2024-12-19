@@ -12,8 +12,15 @@ import prisma from './config/prisma.js';
 
 const app = new Hono();
 
+app.use('/*', cors({
+  origin: ['https://roomah.vercel.app', 'http://localhost:5173'],
+  credentials: true,
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization'],
+  exposeHeaders: ['Content-Length', 'X-Kuma-Revision']
+}));
+
 app.use('*', logger());
-app.use('*', cors());
 
 app.route('/api/users', userRoutes);
 app.route('/api/auth', authRoutes);
