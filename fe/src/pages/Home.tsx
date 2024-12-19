@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import BackgroundImage from '../assets/images/Background.png';
 import WaterImage from "../assets/images/services/Water1.png";
-import LaundryImage from "../assets/images/services/laundry1.png";
-import CleaningImage from "../assets/images/services/cleaning1.png";
+import LaundryImage from "../assets/images/services/Laundry1.png";
+import CleaningImage from "../assets/images/services/Cleaning1.png";
 
 export default function HomePage() {
   const navigate = useNavigate();

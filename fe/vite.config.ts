@@ -8,6 +8,11 @@ export default defineConfig({
     sourcemap: true,
     emptyOutDir: true
   },
+  resolve: {
+    alias: {
+      '@': '/src'
+    }
+  },
   server: {
     port: 5173,
     strictPort: true
