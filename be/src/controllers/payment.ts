@@ -1,4 +1,5 @@
 import { Context } from 'hono';
+import type { StatusCode } from 'hono/utils/http-status';
 import midtransClient from 'midtrans-client';
 import { Buffer } from 'buffer';
 import prisma from '../config/prisma';
@@ -81,15 +82,15 @@ export class PaymentController {
       }
       return c.json({ 
         success: false, 
-        message: data.message || 'Failed to create transaction' 
-      }, response.status);
-  
+        message: (data as any).message || 'Failed to create transaction' 
+      }, 400 as StatusCode); // Cast to StatusCode
+
     } catch (error) {
       console.error('Payment error:', error);
       return c.json({ 
         success: false, 
-        message: 'Internal server error' 
-      }, 500);
+        message: 'Internal server error'
+      }, 500 as StatusCode);
     }
   }
 }

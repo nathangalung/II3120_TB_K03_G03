@@ -2,13 +2,13 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
-import { userRoutes } from './routes/user';
-import { authRoutes } from './routes/auth';
-import { kostRoutes } from './routes/kost';
-import { orderRoutes } from './routes/order';
-import { paymentRoutes } from './routes/payment';
-import { serviceRoutes } from './routes/service';
-import prisma from './config/prisma';
+import { userRoutes } from './routes/user.js';
+import { authRoutes } from './routes/auth.js';
+import { kostRoutes } from './routes/kost.js';
+import { orderRoutes } from './routes/order.js';
+import { paymentRoutes } from './routes/payment.js';
+import { serviceRoutes } from './routes/service.js';
+import prisma from './config/prisma.js';
 
 const app = new Hono();
 
