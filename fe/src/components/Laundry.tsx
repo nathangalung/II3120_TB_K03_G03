@@ -1,4 +1,5 @@
-import React from 'react';
+import { FC } from 'react';
+import { Service } from '../types';
 import LaundryImage from '../assets/images/laundry/Laundry1.png';
 
 interface LaundryProps {

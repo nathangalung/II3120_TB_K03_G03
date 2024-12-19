@@ -1,4 +1,5 @@
-import React from "react";
+import { FC } from 'react';
+import { Service } from '../types';
 import WaterImage from "../assets/images/water/Water1.png";
 
 interface WaterProps {

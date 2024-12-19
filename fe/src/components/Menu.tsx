@@ -1,4 +1,3 @@
-import React from 'react';
 import LaundryImage1 from "../assets/images/services/Laundry1.png";
 import LaundryImage2 from "../assets/images/services/Laundry2.png";
 import WaterImage1 from "../assets/images/services/Water1.png";

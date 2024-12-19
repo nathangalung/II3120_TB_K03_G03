@@ -26,15 +26,17 @@ export default function KostPage() {
     penaltyFee: 100000, // Set default value
     paymentStatus: 'UNPAID',
     delayDays: 0,
-    totalCost: 0
+    totalCost: 0,
+    continuousType: '0' // Add default value for continuousType
   });
   const navigate = useNavigate();
   const steps = ["Plan", "Payment", "Confirm"];
   const [currentStep, setCurrentStep] = useState(0);
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
     if (userData?.id) {
-      fetch(`http://localhost:3000/api/kosts/status/${userData.id}`)
+      fetch(`${API_URL}/api/kosts/status/${userData.id}`)
         .then(res => res.json())
         .then(data => {
           if (data.success) {
@@ -63,7 +65,7 @@ export default function KostPage() {
         penaltyFee: kostStatus.penaltyFee
       });
   
-      const response = await fetch('http://localhost:3000/api/payment/create-transaction', {
+      const response = await fetch(`${API_URL}/api/payment/create-transaction`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -93,7 +95,7 @@ export default function KostPage() {
               setCurrentStep(2); // Move to Confirm step
               
               // Update payment status
-              await fetch(`http://localhost:3000/api/payment/${result.transaction_id}`, {
+              await fetch(`${API_URL}/api/payment/${result.transaction_id}`, {
                 method: 'PATCH',
                 headers: {
                   'Content-Type': 'application/json',
@@ -105,7 +107,7 @@ export default function KostPage() {
               // Update kost status with new continuous type
               const newContinuous = (parseInt(kostStatus.continuousType) + parseInt(selectedPlan)).toString();
               
-              await fetch(`http://localhost:3000/api/kosts/status/${userData?.id}`, {
+              await fetch(`${API_URL}/api/kosts/status/${userData?.id}`, {
                 method: 'PATCH',
                 headers: {
                   'Content-Type': 'application/json',

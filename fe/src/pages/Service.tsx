@@ -59,6 +59,7 @@ export default function ServicePage() {
   });
   const [currentStep, setCurrentStep] = useState(0);
   const steps = ["Order", "Payment", "Confirm",];
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -66,9 +67,9 @@ export default function ServicePage() {
       setError(null);
       try {
         const [waterRes, laundryRes, cleaningRes] = await Promise.all([
-          fetch('http://localhost:3000/api/services/water'),
-          fetch('http://localhost:3000/api/services/laundry'),
-          fetch('http://localhost:3000/api/services/cleaning')
+          fetch(`${API_URL}/api/services/water`),
+          fetch(`${API_URL}/api/services/laundry`),
+          fetch(`${API_URL}/api/services/cleaning`)
         ]);
   
         const waterData = await waterRes.json();
@@ -182,7 +183,7 @@ export default function ServicePage() {
         return;
       }
 
-      const response = await fetch('http://localhost:3000/api/orders', {
+      const response = await fetch(`${API_URL}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -296,7 +297,7 @@ export default function ServicePage() {
       }
   
       // Create payment transaction
-      const response = await fetch('http://localhost:3000/api/payment/create-transaction', {
+      const response = await fetch(`${API_URL}/api/payment/create-transaction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -327,7 +328,7 @@ export default function ServicePage() {
             try {
               setCurrentStep(2);
               
-              const orderResponse = await fetch('http://localhost:3000/api/orders', {
+              const orderResponse = await fetch(`${API_URL}/api/orders`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

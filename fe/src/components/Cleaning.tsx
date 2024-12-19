@@ -1,4 +1,5 @@
-import React from 'react';
+import { FC } from 'react';
+import { Service } from '../types';
 import CleaningImage from '../assets/images/cleaning/Cleaning1.png';
 
 interface CleaningProps {

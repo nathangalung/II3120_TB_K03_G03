@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import ConfirmImage from '../assets/images/Confirm.png';
 
 export default function ConfirmPage() {
-    const navigate = useNavigate();
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const from = params.get('from');

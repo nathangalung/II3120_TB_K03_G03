@@ -19,12 +19,13 @@ export default function ProfilePage() {
     delayDays: 0
   });
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 
   useEffect(() => {
     if (userData?.id) {
       const fetchKostStatus = () => {
-        fetch(`http://localhost:3000/api/kosts/status/${userData.id}`)
+        fetch(`${API_URL}/api/kosts/status/${userData.id}`)
           .then(res => res.json())
           .then(data => {
             if (data.success) {
@@ -53,7 +54,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (userData?.kostName) {
-      fetch(`http://localhost:3000/api/kosts?name=${userData.kostName}`)
+      fetch(`${API_URL}/api/kosts?name=${userData.kostName}`)
         .then(response => response.json())
         .then(data => {
           if (data.success) {
@@ -76,7 +77,7 @@ export default function ProfilePage() {
     if (!isEditing || !userData?.id) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${userData.id}`, {
+      const response = await fetch(`${API_URL}/api/users/${userData.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
