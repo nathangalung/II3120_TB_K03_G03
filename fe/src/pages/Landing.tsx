@@ -64,7 +64,11 @@ export default function LandingPage() {
     try {
       const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
   
@@ -77,8 +81,8 @@ export default function LandingPage() {
         setError(result.message || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      setError('Server error: Unable to connect to registration service');
       console.error('Registration error:', err);
+      setError('Server error: Unable to connect to registration service');
     }
   };
 

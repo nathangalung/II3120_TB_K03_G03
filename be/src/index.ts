@@ -12,13 +12,21 @@ import prisma from './config/prisma.js';
 
 const app = new Hono();
 
+// Move CORS configuration before route definitions
 app.use('/*', cors({
   origin: ['https://roomah.vercel.app', 'http://localhost:5173'],
   credentials: true,
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization'],
-  exposeHeaders: ['Content-Length', 'X-Kuma-Revision']
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+  maxAge: 86400,
+  credentials: true
 }));
+
+// Add OPTIONS handler for preflight requests
+app.options('/*', (c) => {
+  return c.text('', 204);
+});
 
 app.use('*', logger());
 
