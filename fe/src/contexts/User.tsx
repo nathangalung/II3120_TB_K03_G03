@@ -59,6 +59,25 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setUserData(null);
   };
 
+  const fetchUserData = async () => {
+    try {
+      console.log('Fetching from:', API_URL); // Debug URL
+      const response = await fetch(`${API_URL}/api/users/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log('User data:', data);
+      setUserData(data.data);
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
+    }
+  };
+
   return (
     <UserContext.Provider value={{ userData, setUserData, clearUserData }}>
       {children}
