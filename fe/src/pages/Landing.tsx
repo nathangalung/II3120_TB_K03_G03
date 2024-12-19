@@ -9,7 +9,7 @@ export default function LandingPage() {
   const [showError, setShowError] = useState(true);
   const navigate = useNavigate();
   const { login } = useAuth();
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
     if (error) {

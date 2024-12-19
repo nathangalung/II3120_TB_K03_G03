@@ -19,7 +19,7 @@ export default function ProfilePage() {
     delayDays: 0
   });
   const navigate = useNavigate();
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 
   useEffect(() => {

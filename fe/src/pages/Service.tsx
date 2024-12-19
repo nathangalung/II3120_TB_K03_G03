@@ -59,7 +59,7 @@ const ServicePage: FC = () => {
   });
   const [currentStep, setCurrentStep] = useState(0);
   const steps = ["Order", "Payment", "Confirm",];
-  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -99,7 +99,7 @@ const ServicePage: FC = () => {
     if (userData?.id) {
       const fetchOrders = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/orders/user/${userData.id}`, {
+          const response = await fetch(`${API_URL}/api/orders/user/${userData.id}`, {
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`,
               'Content-Type': 'application/json'
@@ -291,7 +291,7 @@ const ServicePage: FC = () => {
           
                 // Schedule status update to COMPLETED after 10 seconds
                 setTimeout(() => {
-                  fetch(`http://localhost:3000/api/orders/${orderData.id}/status`, {
+                  fetch(`${API_URL}/api/orders/${orderData.id}/status`, {
                     method: 'PATCH',
                     headers: {
                       'Content-Type': 'application/json',
