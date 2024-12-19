@@ -10,21 +10,29 @@ export interface Service {
     clothPrice?: number;
     helmPrice?: number;
     bedcoverPrice?: number;
-  }
+}
   
-  export interface UserData {
+export interface UserData {
     id: string;
     name: string;
     email: string;
     phone?: string;
     kostName?: string;
-  }
+}
   
-  export interface KostStatus {
+export interface KostStatus {
     monthlyPrice: number;
     penaltyFee: number;
     paymentStatus: string;
     delayDays: number;
     totalCost: number;
     continuousType: string;
-  }
+}
+
+export interface MenuService {
+    label: string;
+    hours: string;
+    key: string;
+    image1: string | null;
+    image2: string | null;
+}

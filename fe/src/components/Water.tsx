@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Service } from '../types';
+import type { Service } from '../types';
 import WaterImage from "../assets/images/water/Water1.png";
 
 interface WaterProps {

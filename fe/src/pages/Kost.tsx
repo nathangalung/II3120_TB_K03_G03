@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import type { KostStatus } from '../types';
 import KostImage from '../assets/images/Kost.png';
 import Header from '../components/Header';
 import { useUser } from '../contexts/User';
-import type { KostStatus } from '../types';
 
 declare global {
   interface Window {

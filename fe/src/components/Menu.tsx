@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import type { MenuService } from '../types';
 import LaundryImage1 from "../assets/images/services/Laundry1.png";
 import LaundryImage2 from "../assets/images/services/Laundry2.png";
 import WaterImage1 from "../assets/images/services/Water1.png";
@@ -42,7 +43,7 @@ const Menu: FC<MenuProps> = ({ selectedService, onSelectService }) => {
       image2: null
     }
   ];
-  
+
   return (
     <div className="w-full max-w-[300px] bg-white rounded-lg shadow-md p-4">
       <h2 className="text-lg font-bold mb-4 text-center">Service Menu</h2>

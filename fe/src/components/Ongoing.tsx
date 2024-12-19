@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import LaundryImage from '../assets/images/laundry/Laundry1.png';
 import CleaningImage from '../assets/images/cleaning/Cleaning1.png';
 import WaterImage from '../assets/images/water/Water1.png';
