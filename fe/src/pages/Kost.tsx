@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import type { KostStatus } from '../types';
 import KostImage from '../assets/images/Kost.png';
 import Header from '../components/Header';
@@ -10,14 +9,6 @@ declare global {
     snap: any;
   }
 }
-
-type Card = {
-  name: string;
-  cardNumber: string;
-  maidenName: string;
-  expirationDate: string;
-  isActive: boolean;
-};
 
 const KostPage: FC = () => {
   const { userData } = useUser();
@@ -30,7 +21,6 @@ const KostPage: FC = () => {
     totalCost: 0,
     continuousType: '0'
   });
-  const navigate = useNavigate();
   const steps = ["Plan", "Payment", "Confirm"];
   const [currentStep, setCurrentStep] = useState(0);
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
