@@ -14,13 +14,19 @@ const app = new Hono();
 
 // Move CORS configuration before route definitions
 app.use('/*', cors({
-  origin: ['https://roomah.vercel.app', 'http://localhost:5173'],
+  origin: (origin) => {
+    // Allow requests from both localhost and deployed frontend
+    const allowedOrigins = [
+      'https://roomah.vercel.app',
+      'http://localhost:5173'
+    ];
+    return allowedOrigins.includes(origin) ? origin : false;
+  },
   credentials: true,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
   maxAge: 86400,
-  credentials: true
 }));
 
 // Add OPTIONS handler for preflight requests
