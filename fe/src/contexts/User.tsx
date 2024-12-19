@@ -1,13 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-interface UserData {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  kostName?: string;
-  kostLocation?: string;
-}
+import type { UserData } from '../types';
 
 interface UserContextType {
   userData: UserData | null;
@@ -29,32 +21,6 @@ export const useUser = () => {
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
 
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/users/me`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      setUserData(data.data); // Ensure the correct data structure
-    } catch (error) {
-      console.error('Failed to fetch user data:', error);
-    }
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUserData();
-    } else {
-      setUserData(null);
-    }
-  }, [localStorage.getItem('token')]);
-
   const clearUserData = () => {
     setUserData(null);
   };
@@ -71,12 +37,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log('User data:', data);
+      console.log('User data:', data); // Debug response
       setUserData(data.data);
     } catch (error) {
       console.error('Failed to fetch user data:', error);
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetchUserData();
+    } else {
+      setUserData(null);
+    }
+  }, []);
 
   return (
     <UserContext.Provider value={{ userData, setUserData, clearUserData }}>
