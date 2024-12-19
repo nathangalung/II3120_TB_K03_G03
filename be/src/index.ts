@@ -5,6 +5,7 @@ import { logger } from 'hono/logger';
 import { userRoutes } from './routes/user';
 import { authRoutes } from './routes/auth';
 import { kostRoutes } from './routes/kost';
+import { orderRoutes } from './routes/order';
 import { paymentRoutes } from './routes/payment';
 import { serviceRoutes } from './routes/service';
 import prisma from './config/prisma';
@@ -19,6 +20,7 @@ app.route('/api/auth', authRoutes);
 app.route('/api/kosts', kostRoutes);
 app.route('/api/payment', paymentRoutes);
 app.route('/api/services', serviceRoutes);
+app.route('/api/orders', orderRoutes);
 
 app.get('/', async (c) => {
   try {

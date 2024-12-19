@@ -85,7 +85,7 @@ model Order {
   userId      String
   user        User      @relation(fields: [userId], references: [id])
   serviceType String    // 'KOST', 'WATER', 'LAUNDRY', 'CLEANING'
-  status      String    // 'PENDING', 'COMPLETED', 'CANCELLED'
+  status      String    // 'PENDING', 'PROGRESS', 'COMPLETED', 'CANCELLED'
   amount      Int       // Quantity/months
   totalPrice  Float     // Total amount to be paid
   details     String?   // JSON string containing calculation details

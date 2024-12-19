@@ -102,7 +102,9 @@ export default function KostPage() {
                 body: JSON.stringify({ status: 'SUCCESS' })
               });
           
-              // Update kost status
+              // Update kost status with new continuous type
+              const newContinuous = (parseInt(kostStatus.continuousType) + parseInt(selectedPlan)).toString();
+              
               await fetch(`http://localhost:3000/api/kosts/status/${userData?.id}`, {
                 method: 'PATCH',
                 headers: {
@@ -111,13 +113,11 @@ export default function KostPage() {
                 },
                 body: JSON.stringify({
                   paymentStatus: 'PAID',
-                  continuousType: selectedPlan
+                  continuousType: newContinuous // Use calculated continuous type
                 })
               });
           
-              // Navigate to confirm page
-              navigate('/confirm', { state: { from: 'kost' } });
-          
+              window.location.href = '/confirm?from=kost';
             } catch (error) {
               console.error('Error processing successful payment:', error);
             }

@@ -22,6 +22,16 @@ interface Service {
   bedcoverPrice?: number;
 }
 
+interface Order {
+  id: string;
+  serviceType: string;
+  status: string;
+  amount: number;
+  totalPrice: number;
+  details: string;
+  createdAt: string;
+}
+
 export default function ServicePage() {
   const { userData } = useUser();
   const [selectedService, setSelectedService] = useState("cleaning");
@@ -40,12 +50,15 @@ export default function ServicePage() {
     bedcoverQuantity: 0
   });
   const [cleaningDuration, setCleaningDuration] = useState(0);
-  const [orders, setOrders] = useState({
+  const [orders, setOrders] = useState<{
+    ongoing: Order[];
+    completed: Order[];
+  }>({
     ongoing: [],
     completed: []
   });
   const [currentStep, setCurrentStep] = useState(0);
-  const steps = ["Order", "Payment", "Confirm", "Delivery"];
+  const steps = ["Order", "Payment", "Confirm",];
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -83,17 +96,40 @@ export default function ServicePage() {
 
   useEffect(() => {
     if (userData?.id) {
-      fetch(`http://localhost:3000/api/orders/user/${userData.id}`)
-        .then(res => res.json())
-        .then(data => {
+      const fetchOrders = async () => {
+        try {
+          const response = await fetch(`http://localhost:3000/api/orders/user/${userData.id}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+  
+          if (!response.ok) {
+            throw new Error('Failed to fetch orders');
+          }
+  
+          const data = await response.json();
           if (data.success) {
+            // Filter orders by status
             setOrders({
-              ongoing: data.data.filter((order: any) => order.status === 'PENDING' || order.status === 'PROCESSING'),
-              completed: data.data.filter((order: any) => order.status === 'COMPLETED')
+              ongoing: data.data.filter((order: Order) => 
+                order.status === 'PENDING' || order.status === 'PROGRESS'
+              ),
+              completed: data.data.filter((order: Order) => 
+                order.status === 'COMPLETED'  // Only COMPLETED orders go here
+              )
             });
           }
-        })
-        .catch(err => console.error('Error fetching orders:', err));
+        } catch (err) {
+          console.error('Error fetching orders:', err);
+          setOrders({ ongoing: [], completed: [] });
+        }
+      };
+  
+      fetchOrders();
+      const intervalId = setInterval(fetchOrders, 30000);
+      return () => clearInterval(intervalId);
     }
   }, [userData?.id]);
 
@@ -289,9 +325,8 @@ export default function ServicePage() {
         window.snap.pay(data.token, {
           onSuccess: async function(result: any) {
             try {
-              setCurrentStep(2); // Move to Confirm step
+              setCurrentStep(2);
               
-              // Create order after successful payment
               const orderResponse = await fetch('http://localhost:3000/api/orders', {
                 method: 'POST',
                 headers: {
@@ -302,7 +337,7 @@ export default function ServicePage() {
                   userId: userData.id,
                   serviceType: selectedService,
                   items: orderItems,
-                  status: 'COMPLETED',
+                  status: 'PROGRESS', // Changed from PENDING to PROGRESS
                   amount: selectedService === 'water' ? 
                     orderItems.reduce((sum, item) => sum + item.quantity, 0) : 
                     orderItems[0]?.quantity || 0,
@@ -313,21 +348,11 @@ export default function ServicePage() {
               });
           
               const orderData = await orderResponse.json();
+              
               if (orderData.success) {
-                // Update payment status
-                await fetch(`http://localhost:3000/api/payment/${result.transaction_id}`, {
-                  method: 'PATCH',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                  },
-                  body: JSON.stringify({ status: 'SUCCESS' })
-                });
+                window.location.href = '/confirm?from=service';
           
-                // First navigate to confirm page
-                navigate('/confirm', { state: { from: 'service' } });
-                
-                // Set timeout for processing status
+                // Schedule status update to COMPLETED after 10 seconds
                 setTimeout(() => {
                   fetch(`http://localhost:3000/api/orders/${orderData.id}/status`, {
                     method: 'PATCH',
@@ -335,7 +360,7 @@ export default function ServicePage() {
                       'Content-Type': 'application/json',
                       'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
-                    body: JSON.stringify({ status: 'PROCESSING' })
+                    body: JSON.stringify({ status: 'COMPLETED' })
                   });
                 }, 10000);
           
@@ -392,7 +417,7 @@ export default function ServicePage() {
               </div>
               <span className="ml-2 font-medium text-sm">{step}</span>
               {idx < steps.length - 1 && (
-                <div className="w-16 h-[2px] bg-gray-200 mx-4"></div>
+                <div className="w-16 h-[2px] bg-gray-200 mx-4" />
               )}
             </div>
           ))}
@@ -429,11 +454,19 @@ export default function ServicePage() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-xl font-semibold mb-4">Ongoing Orders</h2>
-                  <Ongoing orders={orders.ongoing} />
+                  {orders.ongoing.length > 0 ? (
+                    <Ongoing orders={orders.ongoing} />
+                  ) : (
+                    <p className="text-gray-500">No ongoing orders</p>
+                  )}
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold mb-4">Past Orders</h2>
-                  <Completed orders={orders.completed} />
+                  {orders.completed.length > 0 ? (
+                    <Completed orders={orders.completed} />
+                  ) : (
+                    <p className="text-gray-500">No past orders</p>
+                  )}
                 </div>
               </div>
             )}
@@ -451,6 +484,6 @@ export default function ServicePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 

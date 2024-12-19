@@ -9,7 +9,7 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const handleViewMore = () => {
-    navigate('/order');
+    navigate('/service');
   };
 
   return (
